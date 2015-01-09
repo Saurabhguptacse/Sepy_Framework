@@ -11,6 +11,7 @@ import mysql.connector
 from mysql.connector import errorcode
 import ConfigParser
 import logging
+from selenium.webdriver.common.action_chains import ActionChains
 
 current_time = datetime.now().strftime('%Y%m%d%H%M%S')
 print current_time
@@ -379,6 +380,27 @@ def closeBrowser():
         
     tcReport("Close Browser", "It should close the browser", sStatusMessage, sStatus)
     log.info(sStatusMessage)
+    return sStatus
+
+###############################################################################
+def clickOnSubmenuItem(oLocatorMenu,oLocatorSubMenu):
+    global driver
+##        sStatus = ""
+    eResult = "Should input Text successfully"
+    try:
+        menu = findElement(oLocatorMenu)
+        ActionChains(driver).move_to_element(menu).perform()
+        submenu = findElement(oLocatorSubMenu)
+        oMenu = ActionChains(driver).move_to_element(menu).move_to_element(submenu)
+        oMenu.click().perform()
+        sStatusMessage = "True ,submenu clicked" + oLocatorSubMenu + "'."
+        sStatus = "Pass"
+    except Exception, e:
+        sStatus = "Fail"
+        sStatusMessage = "Unexpected error for Locator - '" + oLocatorSubMenu + "' : " + str(e)
+    ##        sStatusMessage = "Unexpected error for Locator - '" + oLocator + "' : "
+##    log.info(sStatusMessage)
+    tcReport("inputText", eResult, sStatusMessage, sStatus)
     return sStatus
 
 #########################################################################################
